@@ -24,8 +24,8 @@ public class Worm extends Enemy {
         posX -= 6;
         rect.x = posX;
         rect.y = posY;
-        rect.width = 72;
-        rect.height = 48;
+        rect.width = 20;
+        rect.height = 30;
     }
 
     public Rectangle getBound(){

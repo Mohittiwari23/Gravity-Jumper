@@ -15,10 +15,11 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
     public static final int gameState_Start = 0;
     public static final int gameState_Play = 1;
     public static final int gameState_Over = 2;
-    public static final float gravity = 0.2f;
-    public static final float gravity_neg = -0.2f;
+    public static final float gravity = .7f;
+    public static final float gravity_neg = -0.7f;
+    public static boolean gravityFlipped = false;
     public static final int groundY = 275;
-    public static final int groundY_neg = 175;
+    public static final int ceilingY = 175;
     private Thread thread;
     private Player player;
     private World world;
@@ -26,7 +27,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
 
     private int gameState = gameState_Start;
 
-    private BufferedImage imageGameStart, imageGameOver, imageDeadPlayer;
+    private BufferedImage imageGameStart, imageGameOver, imageDeadPlayer, imageReplayButton;
 
     public GameScreen(){
         thread = new Thread(this);
@@ -37,6 +38,7 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
         imageGameStart = Resources.getResourceImg("resources/start_text.png");
         imageGameOver = Resources.getResourceImg("resources/gameover_text.png");
         imageDeadPlayer = Resources.getResourceImg("resources/death.png");
+        imageReplayButton = Resources.getResourceImg("resources/replay_button.png");
     }
 
     public void startGame(){
@@ -87,10 +89,18 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
                 world.draw(g);
                 g.drawImage(imageDeadPlayer,80, groundY-10,50,50, null);
                 mobManager.draw(g);
-                g.drawImage(imageGameOver, 200 ,50,350,300,null);
+                g.drawImage(imageGameOver, 200 ,35,350,300,null);
+                g.drawImage(imageReplayButton, 360 ,250,35,35,null);
                 break;
         }
 
+    }
+
+    private void resetGame() {
+        player = new Player();
+        player.setX(80);
+        mobManager = new MobManager(player);
+        gravityFlipped = false;
     }
 
     public void keyTyped(KeyEvent e) {}
@@ -104,10 +114,20 @@ public class GameScreen extends JPanel implements Runnable, KeyListener {
                 } else if (gameState == gameState_Play) {
                     player.jump();
                 } else if (gameState == gameState_Over) {
+                    resetGame();
                     gameState = gameState_Play;
                 }
                 break;
-//            case KeyEvent.VK_ENTER:
+            case KeyEvent.VK_ENTER:
+                if(gameState == gameState_Play){
+                    if(gravityFlipped){
+                        gravityFlipped=false;
+                    }
+                    else{
+                        gravityFlipped=true;
+                    }
+                }
+                break;
 
         }
     }

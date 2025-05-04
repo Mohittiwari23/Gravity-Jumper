@@ -30,6 +30,10 @@ public class Animation {
         frames.add(frame);
     }
 
+    public void clearFrame(){
+        frames.clear();
+    }
+
     public BufferedImage getFrame(){
         if(frames.size() > 0){
             return frames.get(index);
